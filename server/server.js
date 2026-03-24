@@ -21,9 +21,12 @@ function sanitize(w){return{
   endings:w.endings,items:w.items,
   puzzles:{cipher:w.puzzles?.cipher?{encoded_text:w.puzzles.cipher.encoded_text,type:w.puzzles.cipher.type}:null,combination:w.puzzles?.combination?{combo_length:w.puzzles.combination.combo.length}:null}}}
 
-http.createServer(async(req,res)=>{
-  const url=new URL(req.url,`http://${req.headers.host}`);const p=url.pathname;
-  res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Access-Control-Allow-Methods','GET,POST,OPTIONS');res.setHeader('Access-Control-Allow-Headers','Content-Type');
+http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const p = url.pathname;
+  res.setHeader('Access-Control-Allow-Origin','*');
+  res.setHeader('Access-Control-Allow-Methods','GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers','Content-Type');
   if(req.method==='OPTIONS'){res.writeHead(204);res.end();return}
 
   if(p==='/api/themes'&&req.method==='GET'){
@@ -57,4 +60,6 @@ http.createServer(async(req,res)=>{
     catch{return json(res,200,{ok:true,reply:"The narrator pauses, distracted."})}}
 
   stat(res,p);
-}).listen(PORT,()=>{console.log(`\n  Escape Room v6 — port ${PORT}\n  API Key: ${process.env.CLAUDE_API_KEY?'SET':'MISSING (wizard tower only)'}\n  http://localhost:${PORT}\n`)});
+}).listen(PORT, '0.0.0.0', () => {
+  console.log(`\n  Escape Room v6 — port ${PORT}\n  API Key: ${process.env.CLAUDE_API_KEY ? 'SET' : 'MISSING (wizard tower only)'}\n  http://0.0.0.0:${PORT}\n`);
+});
