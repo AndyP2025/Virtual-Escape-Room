@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <title>Escape Room</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<!-- THEME SELECT -->
+<div id="theme-scr" class="scr active">
+  <div class="ts-h"><div class="ts-glow">ESCAPE ROOM</div><div class="ts-sub">AI-Generated. First-Person. Every game is unique.</div></div>
+  <div id="ts-st" class="ts-st">Generating worlds...</div>
+  <div id="ts-ld"><div class="spin"></div></div>
+  <div id="ts-cards" class="ts-cards"></div>
+  <div id="ts-err" class="ts-err hidden"></div>
+  <button id="ts-retry" class="btn-g hidden">RETRY</button>
+</div>
+<!-- LOADING -->
+<div id="load-scr" class="scr"><div class="ld-c"><div class="spin lg"></div><div id="ld-t" class="ld-t">Building your world...</div></div></div>
+<!-- GAME -->
+<div id="game-scr" class="scr">
+  <div id="cvs-wrap"></div>
+  <div id="hud">
+    <div id="hud-top">
+      <div class="ht-l"><span id="h-icon">🧙</span><span class="ht-title" id="h-title">ESCAPE ROOM</span></div>
+      <div class="prog" id="prog"><div class="pn current"><span>1</span></div><div class="pl"></div><div class="pn"><span>2</span></div><div class="pl"></div><div class="pn"><span>3</span></div></div>
+      <div class="ht-r"><span class="pat-l">PATIENCE</span><div class="pat-tr"><div class="pat-f" id="pat-f"></div></div><span class="pat-v" id="pat-v">100</span></div>
+    </div>
+    <div id="obj-panel"><div class="obj-label">OBJECTIVE</div><div class="obj-text" id="obj-text">Look around.</div></div>
+    <div class="rm-bar"><span class="rm-tag" id="rname">ROOM</span><button class="rm-reset" id="reset-view" title="Reset camera [R]">⟲</button></div>
+    <!-- MINIMAP -->
+    <div id="minimap"><canvas id="minimap-cvs" width="120" height="120"></canvas></div>
+    <div id="toast-area"></div>
+    <!-- Inspection (moved left of inventory zone) -->
+    <div id="inspect" class="inspect hidden">
+      <div class="insp-e" id="insp-e"></div>
+      <div class="insp-n" id="insp-n"></div>
+      <div class="insp-d" id="insp-d"></div>
+      <div class="insp-btns" id="insp-btns"></div>
+      <button class="insp-back" id="insp-back">← STEP BACK [Esc]</button>
+    </div>
+    <div id="wc-tmr" class="wc-tmr hidden"><span>⏱️</span><span id="wc-n">90</span><span id="wc-l">ENTITY</span></div>
+    <div id="pat-ov" class="pat-ov"></div>
+    <div id="use-m" class="use-m hidden">USE MODE — click an object</div>
+    <div id="click-hint" class="click-hint">Click to look around · Click objects to interact · [H] Hint · [I] Inventory</div>
+    <div id="npc-bub" class="npc-bub hidden"></div>
+  </div>
+  <!-- STORY PROGRESS (expandable left panel) -->
+  <div id="story-pan" class="story-pan collapsed">
+    <div class="story-head">📖 STORY PROGRESS</div>
+    <div id="story-list" class="story-list"></div>
+  </div>
+  <!-- BOTTOM -->
+  <div id="bottom">
+    <div id="msg-log"></div>
+    <div id="chat-w"><input type="text" id="chat-in" placeholder="Ask the narrator or type a command..." autocomplete="off" spellcheck="false"><button id="chat-send">⏎</button></div>
+    <div id="btn-bar">
+      <button class="bb" id="inv-btn">INV <span class="bdg" id="inv-ct">0</span></button>
+      <button class="bb" id="hint-btn">HINT [H]</button>
+      <button class="bb" id="note-btn">📝 NOTES</button>
+      <button class="bb" id="story-btn">📖 STORY</button>
+      <button class="bb wc-b hidden" id="wc-btn">ARTIFACT</button>
+    </div>
+  </div>
+</div>
+<!-- NARRATIVE INTRO -->
+<div id="intro-ov" class="ov hidden"><div class="intro-w"><div class="intro-icon" id="intro-icon"></div><h2 class="intro-title" id="intro-title"></h2><p class="intro-premise" id="intro-premise"></p><div class="intro-obj"><span class="intro-obj-l">OBJECTIVE:</span><span id="intro-obj-t"></span></div><button class="btn-begin" id="intro-go">BEGIN</button></div></div>
+<!-- SIDE PANELS -->
+<div id="inv-pan" class="sp"><div class="sp-h"><h2>INVENTORY</h2><button class="sp-x" id="inv-x">&times;</button></div><div id="inv-list"></div><div class="sp-f">Select item → click object to use</div></div>
+<!-- NOTEPAD -->
+<div id="note-ov" class="ov hidden"><div class="note-w"><div class="note-head"><span>📝 NOTEPAD</span><button class="sp-x" id="note-x">&times;</button></div><textarea id="note-ta" placeholder="Jot down clues, codes, combinations..."></textarea><div class="note-f">Saved automatically.</div></div></div>
+<!-- OVERLAYS -->
+<div id="email-ov" class="ov hidden"><div class="ew"><div class="ew-ch"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="ew-t">DOCUMENT</span><button class="ew-x" id="em-x">&times;</button></div><div class="ew-h"><div>FROM: <span id="em-f"></span></div><div>SUBJ: <span id="em-s"></span></div></div><div class="ew-b" id="em-b"></div></div></div>
+<div id="cipher-ov" class="ov hidden"><div class="mg"><h3>CIPHER DEVICE</h3><p class="mg-n">Rotate the ring to decode.</p><div class="ci-enc" id="ci-enc"></div><div class="ci-rings"><div class="ci-r out" id="ci-out"></div><div class="ci-r inn" id="ci-inn"></div></div><div class="ci-dec" id="ci-dec"></div><div class="ci-ctrl"><button class="mgb" id="ci-l">◀</button><span class="ci-sh" id="ci-sh">0</span><button class="mgb" id="ci-r">▶</button></div><button class="mgb pri" id="ci-ok">DECODE</button><button class="mgb" id="ci-no">CLOSE</button></div></div>
+<div id="dial-ov" class="ov hidden"><div class="mg"><h3>COMBINATION LOCK</h3><p class="mg-n">Set each dial.</p><div class="dial-box" id="dial-box"></div><button class="mgb pri" id="dial-ok">TRY</button><button class="mgb" id="dial-no">CLOSE</button></div></div>
+<div id="vic-ov" class="ov hidden"><div class="vic"><div class="vic-i" id="vi-i">🏆</div><h2 id="vi-t">ESCAPED</h2><div class="vic-s" id="vi-s"></div><p id="vi-tx"></p><div class="vic-st" id="vi-st"></div><div class="vic-a" id="vi-a"></div><button class="mgb pri" id="vi-btn">NEW GAME</button></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="/renderer.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

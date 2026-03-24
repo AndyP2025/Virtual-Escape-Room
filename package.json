@@ -1,0 +1,14 @@
+{
+  "name": "escape-the-approval-maze",
+  "version": "1.0.0",
+  "description": "AI-generated escape rooms with 3D perspective rooms",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
