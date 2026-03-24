@@ -352,6 +352,7 @@ function bindEvents(){
 // ═══ INIT ═══
 document.addEventListener('click',()=>{if(ac.state==='suspended')ac.resume();Renderer.resumeAudio?.()},{once:true});
 $('#ts-retry')?.addEventListener('click',loadThemes);
-(async()=>{const esid=localStorage.getItem('msid');if(esid){try{const d=await api(`/api/state?sessionId=${esid}`);
-  if(d.ok&&d.world){sid=esid;S=d.state;world=d.world;hotspots=d.hotspots;roomVis=d.roomVisual;setPal(world.theme?.palette);show('game-scr');startGame();return}}catch{}}loadThemes()})();
+(async () => {
+  localStorage.removeItem('msid');
+  loadThemes();
 })();
